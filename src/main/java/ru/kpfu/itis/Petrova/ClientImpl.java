@@ -15,7 +15,7 @@ public class ClientImpl implements HttpClient {
     public String get(String url, Map<String, String> headers, Map<String, String> params) {
 
         try {
-            URL urlMain = new URL(methodForUrl(url, params));
+            URL urlMain = new URL(createURL(url, params));
             HttpURLConnection connection = (HttpURLConnection) urlMain.openConnection();
             for (String key : headers.keySet()) {
                 connection.setRequestProperty(key, headers.get(key));
@@ -40,7 +40,7 @@ public class ClientImpl implements HttpClient {
         return null;
     }
 
-    private String methodForUrl(String url, Map<String, String> params) {
+    private String createURL(String url, Map<String, String> params) {
         int count = 0;
         StringBuilder urlBuilder = new StringBuilder(url);
         urlBuilder.append("?");
@@ -67,7 +67,7 @@ public class ClientImpl implements HttpClient {
             }
             postConnection.setDoOutput(true);
 
-            String jsonInputString = methodForJson(params);
+            String jsonInputString = createJSON(params);
 
             try(OutputStream outputStream = postConnection.getOutputStream()){
                 byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
@@ -91,7 +91,7 @@ public class ClientImpl implements HttpClient {
         return null;
     }
 
-    private String methodForJson(Map<String, String> params) {
+    private String createJSON(Map<String, String> params) {
         int counter = 0;
         StringBuilder jsonBuilder = new StringBuilder();
         jsonBuilder.append("{");
@@ -106,5 +106,4 @@ public class ClientImpl implements HttpClient {
         jsonBuilder.append("}");
         return jsonBuilder.toString();
     }
-
 }
